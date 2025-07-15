@@ -4,8 +4,7 @@ import NewText2Image from './view/Generation/ImageGeneration/TextToImage/page'
 const page = () => {
   return (
     <div>
-      page
-
+      this is the page
     </div> 
   )
 }
