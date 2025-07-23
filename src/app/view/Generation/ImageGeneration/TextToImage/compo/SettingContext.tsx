@@ -144,7 +144,7 @@ const SettingContext = () => {
 
       <SaveButton tokens={100} onClick={() => console.log('Saved settings:', settings)} />
       {/* Summary Section */}
-      <div className="mt-4 p-4 bg-zinc-900 rounded-lg text-sm space-y-1 scrollbar-hide overflow-y-auto">
+      <div className="mt-4 p-4 bg-zinc-900 rounded-lg text-lg space-y-1 scrollbar-hide overflow-y-auto">
         <div>Model Selection: {settings.model}</div>
         <div>Aspect Ratio: {settings.aspectRatio}</div>
         <div>Content Type: {settings.contentType}</div>
