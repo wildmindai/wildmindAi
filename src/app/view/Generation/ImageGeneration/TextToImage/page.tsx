@@ -56,7 +56,7 @@ const TextToImagePage: React.FC = () => {
           Enter a prompt, choose a style, and watch Imagine – AI art generator bring your ideas to life!
         </p>
         <div className="flex items-center space-x-2 w-full max-w-5xl">
-          <InputBox />
+        <InputBox />
           <SettingsButton onClick={() => setSettingsOpen(true)} />
         </div>
       </main>
