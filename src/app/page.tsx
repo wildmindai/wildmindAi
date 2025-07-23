@@ -1,11 +1,11 @@
 import React from 'react'
-import NewText2Image from './view/Generation/ImageGeneration/TextToImage/page'
+import TextToImage from './view/Generation/ImageGeneration/Texttoimage/page'
+
 
 const page = () => {
   return (
     <div>
-      page is the page 
-
+      <TextToImage />
     </div> 
   )
 }

@@ -1,154 +1,96 @@
 "use client"
 
+import type React from "react"
 import { useState } from "react"
+import { ArrowLeft, ArrowRight } from "lucide-react"
+import SettingsContent from "./compo/SettingContext"
+import InputBox from "@/app/view/Generation/ui/InputBox"
+import SettingsButton from "../../ui/SettingButton"
+import Particles from "../../ui/Particles"
 
 
-// import BackgroundShapes from "./componennts/BackgroundShapes"
-import Image from 'next/image'
-import { Header } from "../../ui"
-import Footer from "@/app/view/Core/Footer"
-import NavigationFull from "@/app/view/Core/NavigationFull"
-import InputSection from "./components/InputSection"
-import SettingsPanel from "./components/SettingsPanel"
 
-export default function NewText2Image() {
-  const [prompt, setPrompt] = useState("")
-  const [generatedImages, setGeneratedImages] = useState<string[]>([])
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [selectedModel, setSelectedModel] = useState("Stable Diffusion 3.5 Large")
-  const [selectedStyle, setSelectedStyle] = useState<string | null>(null)
-  const [selectedAspectRatio, setSelectedAspectRatio] = useState("1:1")
-  const [selectedQuality, setSelectedQuality] = useState("HD")
-  const [numberOfImages, setNumberOfImages] = useState(1)
-
-  const handleGenerate = async () => {
-    if (!prompt.trim()) return
-
-    setIsGenerating(true)
-    
-    try {
-      // Prepare the final prompt with style if selected
-      const finalPrompt = selectedStyle ? `${prompt}, ${selectedStyle} style` : prompt
-      
-      // Get resolution based on aspect ratio and quality
-      const resolutionMap: Record<string, Record<string, [number, number]>> = {
-        "1:1": {
-          SD: [512, 512],
-          HD: [768, 768],
-          FullHD: [1024, 1024],
-          "2K": [2048, 2048],
-        },
-        "16:9": {
-          SD: [640, 360],
-          HD: [1280, 720],
-          FullHD: [1920, 1080],
-          "2K": [2560, 1440],
-        },
-        "9:16": {
-          SD: [360, 640],
-          HD: [720, 1280],
-          FullHD: [1080, 1920],
-          "2K": [1440, 2560],
-        },
-        "4:3": {
-          SD: [512, 384],
-          HD: [768, 576],
-          FullHD: [1024, 768],
-          "2K": [2048, 1536],
-        },
-      }
-
-      let [width, height] = resolutionMap[selectedAspectRatio]?.[selectedQuality] || [768, 768]
-      // Ensure width and height are divisible by 16
-      width = width - (width % 16)
-      height = height - (height % 16)
-
-      // Call the API
-      const response = await fetch('/api/generate-image', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          prompt: finalPrompt,
-          width,
-          height,
-          num_images: numberOfImages,
-          model: selectedModel,
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to generate images')
-      }
-
-      const data = await response.json()
-      setGeneratedImages(data.image_urls || [])
-    } catch (error) {
-      console.error('Generation failed:', error)
-      // Fallback to placeholder images for demo
-      const placeholderImages = Array(numberOfImages).fill("/placeholder.svg?height=400&width=400")
-      setGeneratedImages(placeholderImages)
-    } finally {
-      setIsGenerating(false)
-    }
-  }
-
-  const handleSettingsToggle = () => {
-    setIsSettingsOpen(!isSettingsOpen)
-  }
+const TextToImagePage: React.FC = () => {
+  const [settingsOpen, setSettingsOpen] = useState(false)
 
   return (
-    <>
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Background Image */}
+
+    <div>
+    <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#100b21] text-white overflow-hidden">
+      {/* Decorative background elements have been commented out as per your code */}
       <div className="absolute inset-0 w-full h-full z-0">
-        <Image src="/newt2image/bg.png" alt="background" width={1920} height={1080} className="w-auto h-auto  md:-mt-48  object-contain " />
+        {/* <Image src="/newt2image/bg.png" alt="background" width={1920} height={1080} className="w-auto h-auto  md:-mt-48  object-contain " /> */}
+        <Particles
+          particleColors={['#A4C48C']}
+          particleCount={420}
+          particleSpread={7}
+          speed={0.1}
+          particleBaseSize={85}
+          moveParticlesOnHover={true}
+          alphaParticles={false}
+          particleTransparency={50}
+          disableRotation={false}
+          className="w-full h-full"
+        />
       </div>
-      <NavigationFull />
-      {/* <BackgroundShapes /> */}
-
-      <div className="relative z-10">
-        <Header title="Text to Image Generator" />
-
-        <main className="container mx-auto  lg:px-8 xl:px-12 2xl:px-16">
-          <InputSection
-            prompt={prompt}
-            setPrompt={setPrompt}
-            onGenerate={handleGenerate}
-            onSettingsToggle={handleSettingsToggle}
-            isGenerating={isGenerating}
-            generatedImages={generatedImages}
-            selectedModel={selectedModel}
-            selectedStyle={selectedStyle}
-            selectedQuality={selectedQuality}
-            selectedAspectRatio={selectedAspectRatio}
-            numberOfImages={numberOfImages}
-          />
-        </main>
-
-        
+      {/* Navigation buttons */}
+      <button className="absolute left-4 md:left-8 top-1/2 transform -translate-y-1/2 p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors z-10">
+        <ArrowLeft size={24} className="text-cyan-400" />
+      </button>
+      <div className="absolute right-4 md:right-8 top-1/2 transform -translate-y-1/2 flex flex-col items-center gap-2 z-10">
+        <button className="p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors">
+          <ArrowRight size={24} className="text-cyan-400" />
+        </button>
+        <span className="text-xs text-gray-400">AI Stickers</span>
       </div>
-      
 
-      <SettingsPanel
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        selectedModel={selectedModel}
-        setSelectedModel={setSelectedModel}
-        selectedStyle={selectedStyle}
-        setSelectedStyle={setSelectedStyle}
-        selectedAspectRatio={selectedAspectRatio}
-        setSelectedAspectRatio={setSelectedAspectRatio}
-        selectedQuality={selectedQuality}
-        setSelectedQuality={setSelectedQuality}
-        numberOfImages={numberOfImages}
-        setNumberOfImages={setNumberOfImages}
-      />
-      
+      {/* Hero content */}
+      <main className="relative z-10 flex flex-col items-center justify-center text-center px-4 space-y-8 w-full">
+        <h1 className="text-5xl md:text-7xl font-bold leading-tight">
+          Text to image with AI Art
+          <br />
+          Generator
+        </h1>
+        <p className="max-w-xl text-gray-400">
+          Create awe-inspiring masterpieces effortlessly and explore the endless possibilities of AI generated art.
+          Enter a prompt, choose a style, and watch Imagine – AI art generator bring your ideas to life!
+        </p>
+        <div className="flex items-center space-x-2 w-full max-w-5xl">
+          <InputBox />
+          <SettingsButton onClick={() => setSettingsOpen(true)} />
+        </div>
+      </main>
+
+      {/* Slide-in Settings Panel */}
+      <div
+        className={`fixed inset-0 z-50 transition-opacity duration-300 ease-in-out ${
+          settingsOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+      >
+        {/* Backdrop */}
+        <div className="fixed inset-0 bg-black/60" onClick={() => setSettingsOpen(false)} aria-hidden="true" />
+        {/* Panel */}
+        <div
+  className={`relative w-[450px] max-w-full h-full overflow-y-auto transform transition-transform duration-300 ease-in-out ${
+    settingsOpen ? 'translate-x-0' : '-translate-x-full'
+  } bg-white/5 backdrop-blur-lg  rounded-2xl `}
+>
+          <div className="flex justify-between items-center p-4">
+            <h2 className="text-xl font-semibold"></h2>
+            <button
+              onClick={() => setSettingsOpen(false)}
+              className="text-gray-400 hover:text-white text-2xl leading-none"
+              aria-label="Close settings"
+            >
+              &times;
+            </button>
+          </div>
+          <SettingsContent />
+        </div>
+      </div>
     </div>
-    <Footer />
-    </>
+    </div>
   )
 }
+
+export default TextToImagePage
