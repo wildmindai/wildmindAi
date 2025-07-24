@@ -1,11 +1,14 @@
 import React from 'react'
-import TextToImage from './view/Generation/ImageGeneration/Texttoimage/page'
-
+import TextToImagePage from './view/Generation/ImageGeneration/TextToImage/page'
+import StickerGeneration from './view/Generation/ImageGeneration/StickerGeneration/page'
+import ImagetoImage from './view/Generation/ImageGeneration/ImageToImage/page'
 
 const page = () => {
   return (
     <div>
-      <TextToImage />
+      {/* <TextToImagePage /> */}
+      {/* <StickerGeneration /> */}
+      <ImagetoImage />
     </div> 
   )
 }

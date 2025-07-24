@@ -8,7 +8,8 @@ type Props = {
   colors: string[];
   selected: string;
   onSelect: (color: string) => void;
-  includeCustomInput?: boolean; // toggle input box visibility
+  includeCustomInput?: boolean;
+  customPlaceholder?: string; // Add custom placeholder prop
 };
 
 const DropDownWithCircle: React.FC<Props> = ({
@@ -16,7 +17,8 @@ const DropDownWithCircle: React.FC<Props> = ({
   colors,
   selected,
   onSelect,
-  includeCustomInput = false, // default to false
+  includeCustomInput = false,
+  customPlaceholder = "Enter Color Name", // Default placeholder
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [customColor, setCustomColor] = useState('');
@@ -79,7 +81,7 @@ const DropDownWithCircle: React.FC<Props> = ({
               <div className="w-full px-5 py-3 rounded-lg bg-[#1a1a1a]">
                 <input
                   type="text"
-                  placeholder="Enter Color Name"
+                  placeholder={customPlaceholder}
                   value={customColor}
                   onChange={(e) => setCustomColor(e.target.value)}
                   onKeyDown={(e) => {
